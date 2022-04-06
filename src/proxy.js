@@ -26,7 +26,8 @@ const _DEFAULTS = {
   returnType: 'json',
   headers: {
     // 'X-Requested-With': 'XmlHttpRequest'
-  }
+  },
+  options: {}
 }
 
 const container = {}
@@ -59,7 +60,8 @@ function proxy (object) {
             contentType: object._setContentType(options.contentType || _DEFAULTS.contentType, parameters, args, options),
             fallback: options.fallback || _DEFAULTS.fallback,
             returnType: object._setReturnType(options.returnType || _DEFAULTS.returnType, parameters, args, options),
-            headers: object._setHeaders(options.headers || _DEFAULTS.headers || {}, parameters, args, options)
+            headers: object._setHeaders(options.headers || _DEFAULTS.headers || {}, parameters, args, options),
+            options: Object.assign({}, _DEFAULTS.options, options.options)
           }
           const rawResult = execute(
             object._setData(property, parameters, args, options),
@@ -152,7 +154,8 @@ function execute (data, options, target) {
     method: options.method,
     responseType: options.returnType,
     data,
-    headers: options.headers
+    headers: options.headers,
+    options: options.options
   })
 }
 
@@ -188,7 +191,8 @@ class Api {
       method: options.method || protoOptions.method,
       contentType: options.contentType || protoOptions.contentType,
       returnType: options.returnType || protoOptions.returnType,
-      headers: options.headers || protoOptions.headers || {}
+      headers: options.headers || protoOptions.headers || {},
+      options: options.options || protoOptions.options || {}
     }
 
     this._init()
@@ -254,7 +258,8 @@ Api.prototype.__options = {
   prefix: _DEFAULTS.prefix,
   method: _DEFAULTS.method,
   contentType: _DEFAULTS.contentType,
-  returnType: _DEFAULTS.returnType
+  returnType: _DEFAULTS.returnType,
+  options: _DEFAULTS.options
 }
 
 function setDefaults (defaultFunc) {
